@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Package - FlipZon</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="Track.css">
+</head>
+<body>
+<header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">Flip<span>Zon</span></a>
+            <nav>
+                <ul>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="index.html#booking">Book Now</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#pricing">Pricing</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="login.html">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header> 
+  <main class="tracking-container">
+        <div class="tracking-header">
+            <h1>Track Your Package</h1>
+            <p>Real-time updates on your shipment's journey</p>
+        </div>
+        <div class="tracking-search">
+            <form id="tracking-form" class="form-group">
+                <input type="text" id="tracking-number-input" placeholder="Enter your tracking number" required>
+                <button type="submit" class="btn">Track</button>
+            </form>
+        </div>
+          <div class="tracking-results" id="tracking-results">
+            </div>
+        <div class="recent-tracking">
+            <h3>Your Recent Shipments</h3>
+            <div class="tracking-cards" id="recent-tracking-cards">
+                <!-- Tracking cards will be added here -->
+            </div>
+        </div>
+    </main>
+<div class="print-receipt-section" id="print-receipt-section">
+   </div>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        const trackingData = {
+            "FLPZ123456789": {
+                status: "In Transit",
+                progress: 50,
+                activeStep: 2,
+                estimatedDelivery: "May 15, 2025",
+                weight: "2.5 kg",
+                dimensions: "25 x 15 x 10 cm",
+                deliveryType: "Express (24 hours)",
+                sender: "123 Main St, New Delhi, India",
+                receiver: "456 Park Ave, Mumbai, India",
+                route: {
+                    origin: [28.6139, 77.2090],
+                    destination: [19.0760, 72.8777],
+                    current: [23.2599, 77.4126], // Bhopal
+                    stops: [
+                        { coords: [28.6139, 77.2090], name: "New Delhi Distribution Center" },
+                        { coords: [23.2599, 77.4126], name: "Bhopal Transit Hub" },
+                        { coords: [19.0760, 72.8777], name: "Mumbai Delivery Hub" }
+                    ]
+                },
+                timeline: [
+                    { date: "May 12, 2025 - 10:30 AM", text: "Package has arrived at Bhopal transit hub", location: "Bhopal, India" },
+                    { date: "May 12, 2025 - 8:15 AM", text: "Package departed from Delhi facility", location: "New Delhi, India" },
+                    { date: "May 11, 2025 - 4:45 PM", text: "Package processed and ready for dispatch", location: "New Delhi, India" },
+                    { date: "May 11, 2025 - 2:30 PM", text: "Order received and processing started", location: "New Delhi, India" }
+                ]
+            },
+            "FLPZ987654321": {
+                status: "Processing",
+                progress: 25,
+                activeStep: 1,
+                estimatedDelivery: "May 18, 2025",
+                weight: "5.2 kg",
+                dimensions: "40 x 30 x 20 cm",
+                deliveryType: "Standard (3-5 days)",
+                sender: "789 Tech Park, Bangalore, India",
+                receiver: "321 Garden St, Chennai, India",
+                route: {
+                    origin: [12.9716, 77.5946],
+                    destination: [13.0827, 80.2707],
+                    current: [12.9716, 77.5946], // Bangalore
+                    stops: [
+                        { coords: [12.9716, 77.5946], name: "Bangalore Warehouse" },
+                        { coords: [13.0827, 80.2707], name: "Chennai Delivery Center" }
+                    ]
+                },
+                timeline: [
+                    { date: "May 14, 2025 - 11:20 AM", text: "Package is being processed at warehouse", location: "Bangalore, India" },
+                    { date: "May 14, 2025 - 9:00 AM", text: "Order received and verification complete", location: "Bangalore, India" }
+                ]
+            },
+            "FLPZ456789123": {
+                status: "Out for Delivery",
+                progress: 75,
+                activeStep: 3,
+                estimatedDelivery: "May 13, 2025 (Today)",
+                weight: "1.8 kg",
+                dimensions: "20 x 15 x 5 cm",
+                deliveryType: "Same Day Delivery",
+                sender: "555 Market St, Kolkata, India",
+                receiver: "888 Lake View, Hyderabad, India",
+                route: {
+                    origin: [22.5726, 88.3639],
+                    destination: [17.3850, 78.4867],
+                    current: [17.3850, 78.4867], // Hyderabad
+                    stops: [
+                        { coords: [22.5726, 88.3639], name: "Kolkata Sorting Facility" },
+                        { coords: [17.3850, 78.4867], name: "Hyderabad Local Delivery" }
+                    ]
+                },
+                timeline: [
+                    { date: "May 13, 2025 - 8:45 AM", text: "Package is out for delivery", location: "Hyderabad, India" },
+                    { date: "May 13, 2025 - 6:30 AM", text: "Package arrived at local delivery center", location: "Hyderabad, India" },
+                    { date: "May 12, 2025 - 10:15 PM", text: "Package departed from Kolkata", location: "Kolkata, India" },
+                    { date: "May 12, 2025 - 5:30 PM", text: "Package processed at origin facility", location: "Kolkata, India" }
+                ]
+            },    
+            "FLPZ987654325": {
+    status: "In Transit",
+    progress: 60,
+    activeStep: 2,
+    estimatedDelivery: "May 12, 2025",
+    weight: "1.5 kg",
+    dimensions: "25 x 15 x 10 cm",
+    deliveryType: "Standard (4-5 days)",
+    sender: "11 Green Avenue, Delhi, India",
+    receiver: "78 Tech Hub, Bengaluru, India",
+    route: {
+        origin: [28.6139, 77.2090], // Delhi
+        destination: [12.9716, 77.5946], // Bengaluru
+        current: [17.3850, 78.4867], // Hyderabad
+        stops: [
+            { coords: [28.6139, 77.2090], name: "Delhi Dispatch Center" },
+            { coords: [17.3850, 78.4867], name: "Hyderabad Transit Hub" },
+            { coords: [12.9716, 77.5946], name: "Bengaluru Delivery Point" }
+        ]
+    },
+    timeline: [
+        { date: "May 10, 2025 - 6:00 PM", text: "Arrived at Hyderabad transit hub", location: "Hyderabad, India" },
+        { date: "May 10, 2025 - 10:00 AM", text: "Departed from Delhi facility", location: "Delhi, India" },
+        { date: "May 9, 2025 - 4:00 PM", text: "Shipment picked up", location: "Delhi, India" }
+    ]
+},
+            "FLPZ789123456": {
+                status: "Delivered",
+                progress: 100,
+                activeStep: 4,
+                estimatedDelivery: "May 10, 2025",
+                weight: "3.0 kg",
+                dimensions: "30 x 20 x 15 cm",
+                deliveryType: "Express (48 hours)",
+                sender: "222 Business Park, Pune, India",
+                receiver: "444 Hillside, Ahmedabad, India",
+                route: {
+                    origin: [18.5204, 73.8567],
+                    destination: [23.0225, 72.5714],
+                    current: [23.0225, 72.5714], // Ahmedabad
+                    stops: [
+                        { coords: [18.5204, 73.8567], name: "Pune Dispatch Center" },
+                        { coords: [23.0225, 72.5714], name: "Ahmedabad Delivery Point" }
+                    ]
+                },
+                timeline: [
+                    { date: "May 10, 2025 - 2:15 PM", text: "Package delivered successfully", location: "Ahmedabad, India" },
+                    { date: "May 10, 2025 - 11:30 AM", text: "Package is out for delivery", location: "Ahmedabad, India" },
+                    { date: "May 10, 2025 - 9:00 AM", text: "Package arrived at local facility", location: "Ahmedabad, India" },
+                    { date: "May 9, 2025 - 7:45 PM", text: "Package departed from Pune", location: "Pune, India" }
+                ]
+            }
+        };
+         document.addEventListener('DOMContentLoaded', function() {
+           loadRecentTrackingCards();
+        const urlParams = new URLSearchParams(window.location.search);
+            const trackingNumber = urlParams.get('tracking');
+             if (trackingNumber && trackingData[trackingNumber]) {
+                 document.getElementById('tracking-number-input').value = trackingNumber;
+                 loadTrackingData(trackingNumber);
+             } else {
+                 const firstTrackingNumber = Object.keys(trackingData)[0];
+                 loadTrackingData(firstTrackingNumber);
+           }
+          document.getElementById('tracking-form').addEventListener('submit', function(e) {
+              e.preventDefault();
+              const trackingNumber = document.getElementById('tracking-number-input').value.trim();
+                 if (trackingData[trackingNumber]) {
+                     loadTrackingData(trackingNumber);
+                     history.pushState(null, null, `?tracking=${trackingNumber}`);
+                } else {
+                  alert('Tracking number not found. Please check and try again.');
+               }
+            });
+         });
+function loadRecentTrackingCards() {
+            const cardsContainer = document.getElementById('recent-tracking-cards');
+            cardsContainer.innerHTML = '';
+            Object.keys(trackingData).forEach(trackingNumber => {
+                const data = trackingData[trackingNumber];
+                const statusClass = getStatusClass(data.status);
+                const card = document.createElement('div');
+                card.className = 'tracking-card';
+                card.innerHTML = `
+                    <div class="tracking-card-number">${trackingNumber}</div>
+                    <div class="tracking-card-status">
+                        <span>${data.status}</span>
+                        <span class="status-badge ${statusClass}">${data.status}</span>
+                    </div>
+                    <div class="tracking-card-destination">To: ${data.receiver.split(',')[2].trim()}</div>
+                `;
+                card.addEventListener('click', () => {
+                    document.getElementById('tracking-number-input').value = trackingNumber;
+                    loadTrackingData(trackingNumber);
+                    history.pushState(null, null, `?tracking=${trackingNumber}`);
+                    document.querySelectorAll('.tracking-card').forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    card.classList.add('active');
+                });
+                cardsContainer.appendChild(card);
+            });
+        }
+        function getStatusClass(status) {
+            switch(status.toLowerCase()) {
+                case 'processing': return 'status-processing';
+                case 'in transit': return 'status-transit';
+                case 'out for delivery': return 'status-out';
+                case 'delivered': return 'status-delivered';
+                default: return '';
+            }
+        }
+        function loadTrackingData(trackingNumber) {
+            const data = trackingData[trackingNumber];
+            const resultsContainer = document.getElementById('tracking-results');
+            const statusItems = [
+                { icon: 'fa-shopping-cart', text: 'Order Placed' },
+                { icon: 'fa-cog', text: 'Processing' },
+                { icon: 'fa-truck', text: 'In Transit' },
+                { icon: 'fa-home', text: 'Out for Delivery' },
+                { icon: 'fa-box-open', text: 'Delivered' }
+            ];
+            let statusHTML = `
+                <div class="tracking-status">
+                    <div class="status-progress">
+                        <div class="status-progress-bar" style="width: ${data.progress}%;"></div>
+                    </div>
+            `;
+            statusItems.forEach((item, index) => {
+                let itemClass = '';
+                if (index < data.activeStep) itemClass = 'completed';
+                else if (index === data.activeStep) itemClass = 'active';
+                statusHTML += `
+                    <div class="status-item ${itemClass}">
+                        <div class="status-icon">
+                            <i class="fas ${item.icon}"></i>
+                        </div>
+                        <div class="status-text">${item.text}</div>
+                    </div>
+                `;
+            });
+            statusHTML += `</div>`;
+let timelineHTML = '';
+            data.timeline.forEach((item, index) => {
+                timelineHTML += `
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">${item.date}</div>
+                            <div class="timeline-text">${item.text}</div>
+                            <div class="timeline-location">${item.location}</div>
+                        </div>
+                    </div>
+                `;
+            });
+resultsContainer.innerHTML = `
+                ${statusHTML}
+                
+                <div class="tracking-details">
+                    <div class="package-info">
+                        <h3>Package Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Tracking Number:</span>
+                                <span class="info-value">${trackingNumber}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Status:</span>
+                                <span class="info-value">${data.status}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Estimated Delivery:</span>
+                                <span class="info-value">${data.estimatedDelivery}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Weight:</span>
+                                <span class="info-value">${data.weight}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Dimensions:</span>
+                                <span class="info-value">${data.dimensions}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Delivery Type:</span>
+                                <span class="info-value">${data.deliveryType}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="sender-receiver">
+                            <div class="address-card">
+                                <h4>Sender</h4>
+                                <p>${data.sender}</p>
+                            </div>
+                            <div class="address-card">
+                                <h4>Receiver</h4>
+                                <p>${data.receiver}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="map-container">
+                        <div id="tracking-map"></div>
+                    </div>
+                </div>
+                
+                <div class="timeline">
+                    <h3>Shipment History</h3>
+                    ${timelineHTML}
+                </div>
+                
+                <div class="tracking-actions">
+                    <button class="btn btn-outline" id="print-receipt">
+                        <i class="fas fa-print"></i> Print Receipt
+                    </button>
+                    <button class="btn" id="contact-support">
+                        <i class="fas fa-headset"></i> Contact Support
+                    </button>
+                </div>
+            `;
+            initMap(data.route);
+            
+           
+            document.getElementById('print-receipt')?.addEventListener('click', function() {
+                preparePrintReceipt(trackingNumber, data);
+                setTimeout(() => {  //added now extra
+                window.print();
+            }, 100);
+            });
+            
+            document.getElementById('contact-support')?.addEventListener('click', function() {
+                window.location.href = 'index.html#contact';
+            });
+            
+           
+            document.querySelectorAll('.tracking-card').forEach(card => {
+                const cardNumber = card.querySelector('.tracking-card-number').textContent;
+                card.classList.toggle('active', cardNumber === trackingNumber);
+            });
+        }
+
+        function preparePrintReceipt(trackingNumber, data) {
+            const printSection = document.getElementById('print-receipt-section');
+        let timelinePrintHTML = '';
+            data.timeline.forEach(item => {
+                timelinePrintHTML += `
+                    <div class="receipt-timeline-item">
+                        <div class="receipt-timeline-date">${item.date}</div>
+                        <div class="receipt-timeline-text">${item.text}</div>
+                        <div class="receipt-timeline-location">${item.location}</div>
+                    </div>
+                `;
+            });
+            
+            printSection.innerHTML = `
+                <div class="receipt-header">
+                    <h2>FlipZon Shipping Receipt</h2>
+                    <p>Tracking Number: ${trackingNumber}</p>
+                    <p>Printed on: ${new Date().toLocaleString()}</p>
+                </div>
+                
+                <div class="receipt-details">
+                    <div class="receipt-row">
+                        <div class="receipt-label">Status:</div>
+                        <div class="receipt-value">${data.status}</div>
+                    </div>
+                    <div class="receipt-row">
+                        <div class="receipt-label">Estimated Delivery:</div>
+                        <div class="receipt-value">${data.estimatedDelivery}</div>
+                    </div>
+                    <div class="receipt-row">
+                        <div class="receipt-label">Weight:</div>
+                        <div class="receipt-value">${data.weight}</div>
+                    </div>
+                    <div class="receipt-row">
+                        <div class="receipt-label">Dimensions:</div>
+                        <div class="receipt-value">${data.dimensions}</div>
+                    </div>
+                    <div class="receipt-row">
+                        <div class="receipt-label">Service Type:</div>
+                        <div class="receipt-value">${data.deliveryType}</div>
+                    </div>
+                    
+                    <div class="receipt-divider"></div>
+                    
+                    <div class="receipt-row">
+                        <div class="receipt-label">Sender:</div>
+                        <div class="receipt-value">${data.sender}</div>
+                    </div>
+                    <div class="receipt-row">
+                        <div class="receipt-label">Receiver:</div>
+                        <div class="receipt-value">${data.receiver}</div>
+                    </div>
+                </div>
+                
+                <div class="receipt-divider"></div>
+                
+                <h3>Shipment Timeline</h3>
+                <div class="receipt-timeline">
+                    ${timelinePrintHTML}
+                </div>
+                
+                <div class="receipt-footer">
+                    <p>Thank you for choosing FlipZon for your shipping needs</p>
+                    <p>For any inquiries, please contact our customer support</p>
+                </div>
+            `; 
+            printSection.style.visibility = "visible";
+    printSection.style.position = "static";
+    printSection.style.opacity = "1";
+        }
+        function initMap(routeData) {
+         
+            const oldMap = document.getElementById('tracking-map');
+            if (oldMap._leaflet_map) {
+                oldMap._leaflet_map.remove();
+            }
+           const map = L.map('tracking-map').setView(routeData.current, 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+           
+            routeData.stops.forEach((stop, index) => {
+                const isOrigin = index === 0;
+                const isDestination = index === routeData.stops.length - 1;
+                const isCurrent = stop.coords[0] === routeData.current[0] && 
+                                 stop.coords[1] === routeData.current[1];
+                
+                let iconColor = 'blue';
+                if (isOrigin) iconColor = 'green';
+                if (isDestination) iconColor = 'red';
+                if (isCurrent) iconColor = 'orange';
+                
+                const icon = L.divIcon({
+                    className: 'custom-icon',
+                          html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;"></div>`,   
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                });
+                
+                const marker = L.marker(stop.coords, { icon }).addTo(map);
+                
+                let popupText = stop.name;
+                if (isOrigin) popupText = 'Origin: ' + popupText;
+                if (isDestination) popupText = 'Destination: ' + popupText;
+                if (isCurrent) popupText += ' (Current Location)';
+                
+                marker.bindPopup(popupText);
+                
+                if (isCurrent) {
+                    marker.openPopup();
+                }
+            });
+            const routeCoordinates = routeData.stops.map(stop => stop.coords);
+            const routeLine = L.polyline(routeCoordinates, {
+                color: '#4CAF50',
+                weight: 3,
+                dashArray: '5, 5'
+            }).addTo(map);
+            map.fitBounds(routeLine.getBounds());
+            const isCurrentAtStop = routeData.stops.some(stop => 
+                stop.coords[0] === routeData.current[0] && 
+                stop.coords[1] === routeData.current[1]
+            );
+            if (!isCurrentAtStop) {
+                const currentIcon = L.divIcon({
+                    className: 'custom-icon',
+                    html: `<div style="background-color: orange; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white;"></div>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+                const currentMarker = L.marker(routeData.current, { icon: currentIcon })
+                    .addTo(map)
+                    .bindPopup('Current Location')
+                    .openPopup();
+            }
+        }
+            </script>
+  </body>
+</html>
