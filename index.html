@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlipZon - Fast & Reliable Delivery Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="courier.css">
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+     <link rel="icon" type="image/png" href="https://media-hosting.imagekit.io/0b9676c90ee24f15/favicon.png?Expires=1839827414&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=IUy4SdNKTz04Y~1cH9gvH1UDnltVuSROulC~jnEy-sGp-LW44risesP81o5GD8G8ABRp~mXPu-IDnMuDwVFxLlIUd9w6JQbRJyDuqKYZgNiwYWxaGxHqL8qxPmyZJiAIZHQ5Kxq9stKCuDKz0cSd3wNDmvRUp89ojW4vGBywAUNWiL6UcaoIXm9IL3YyZJovwrh4omYpD0AwgyrDcKyF8hUkzyV2g1SHCMbuUlITEzu47RWOCD3CrH07~ltQHrnaPBneiCUVHYDD7R9Qu7oBAMezl91wWybgJbjyrF5JGERKFyjQi91WjtNqSYQN7v-JQ61hZ6q2QQbuyoto7FBBDQ__">
+     <link rel="stylesheet" href="toggle.css">
+</head>
+<body>
+  <header>
+        <div class="container header-container">
+            <a href="#" class="logo">Flip<span id="zon">Zon</span></a>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                     <li><a href="#booking">Book Now</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="login.html">Login</a></li>
+                     <li><i class="fas fa-sun" id="toggle"></i></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </header>
+     <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Fast & Reliable Courier Services</h1>
+                <p>We deliver your packages with care and on time, anywhere. Trust us with your important shipments.</p>
+                <a href="#services" class="btn">Our Services</a>
+                
+                <div class="tracking-form">
+                    <form class="form-group" action="tracking.html" method="get">
+                        <input type="text" name="tracking_number" placeholder="Enter your tracking number" required>
+                        <button type="submit" class="btn">Track</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+<section class="services" id="services">
+    <div class="container">
+        <h2 class="section-title">Our Services</h2>
+        <div class="services-grid">
+           <div class="card-wrapper">
+                <div class="service-card">
+                    <div class="card-front">
+                        <div class="service-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <h3>Express Delivery</h3>
+                    </div>
+                    <div class="card-back">
+                        <div class="service-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <h3>Express Delivery</h3>
+                        <p style="color: black;">Get your packages delivered within 24 hours for urgent shipments that can't wait</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-wrapper">
+                <div class="service-card">
+                    <div class="card-front">
+                        <div class="service-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <h3>Package Tracking</h3>
+                    </div>
+                    <div class="card-back">
+                        <div class="service-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <h3>Package Tracking</h3>
+                        <p style="color: black;">Real-time tracking so you always know where your shipment is.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-wrapper">
+                <div class="service-card">
+                    <div class="card-front">
+                        <div class="service-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3>Safe Handling</h3>
+                    </div>
+                    <div class="card-back">
+                        <div class="service-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3>Safe Handling</h3>
+                        <p style="color: black;">We prioritize the safety of your packages with secure packaging, careful handling, and trusted delivery practices.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    <section class="booking" id="booking">
+    <div class="container">
+        <h2 class="section-title">Book a Delivery</h2>
+        <div class="booking-intro">
+            <p>Your package is waiting to go — let's get it booked!</p>
+            <button id="show-booking-form" class="btn">Book Now</button>
+        </div>
+        <div class="booking-form-container" id="booking-form-container" style="display: none;">
+            <form id="booking-form">
+                <input type="hidden" name="tracking_number" id="tracking_number">
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Sender Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sender-name">Full Name</label>
+                            <input type="text" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sender-email">Email Address</label>
+                            <input type="email" name="email" placeholder="Email" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sender-phone">Phone Number</label>
+                            <input type="tel" name="phone" placeholder="Phone Number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sender-address">Full Address</label>
+                            <textarea id="address" name="sender_address" placeholder="Address" rows="3" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Receiver Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="receiver-name">Full Name</label>
+                            <input type="text" id="receiver-name" name="receiver_name" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="receiver-phone">Phone Number</label>
+                            <input type="tel" id="receiver-phone" name="receiver_phone" placeholder="Phone Number" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="receiver-address">Full Address</label>
+                        <textarea id="receiver-address" name="receiver_address" placeholder="Address" rows="3" required></textarea>
+                    </div>
+                </div> 
+
+                <div class="form-section">
+                    <h3><i class="fas fa-box"></i> Package Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="package-type">Package Type</label>
+                            <select id="Parcel-type" name="parcel_type" required>
+                                <option value="">Select Parcel type</option>
+                                <option value="document">Documents</option>
+                                <option value="parcel">Parcel</option>
+                                <option value="fragile">Fragile Items</option>
+                                <option value="electronics">Electronics</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="package-weight">Weight (kg)</label>
+                            <input type="number" id="package-weight" name="package_weight" min="0.1" step="0.1" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="package-dimensions">Dimensions (cm)</label>
+                            <input type="text" id="package-dimensions" name="package_dimensions" placeholder="L x W x H">
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery-type">Delivery Speed</label>
+                            <select id="delivery-type" name="delivery_type" required>
+                                <option value="">Select delivery speed</option>
+                                <option value="standard">Standard (2-3 days)</option>
+                                <option value="express">Express (24 hours)</option>
+                                <option value="same-day">Same Day</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="package-description">Package Description</label>
+                        <textarea id="package-description" name="package_description" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-calendar-alt"></i> Pickup Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pickup-date">Pickup Date</label>
+                            <input type="date" id="pickup-date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickup-time">Pickup Time</label>
+                            <input type="time" id="pickup-time" name="pickup_time" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="special-instructions">Special Instructions</label>
+                        <textarea name="message" placeholder="Additional Instructions"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-large">Book Delivery Now</button>
+            </form>
+        </div>
+    </div>
+</section>
+<section class="about" id="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>About FlipZon</h2>
+                <p>At FlipZon, we are committed to providing fast, reliable, and affordable courier services that ensure your packages reach their destination safely and on time. Founded by a passionate group of students at Chitkara University, our journey began with the idea of simplifying parcel delivery and tracking for everyday users like you.
+
+We believe that logistics should be simple and easy. With this in mind, we designed FlipZon to offer intuitive features, from booking shipments to tracking them, all through a seamless, user-friendly interface. Our team worked tirelessly to create a platform that you can trust, focusing on the values of speed, transparency, and convenience.
+
+Whether you're sending a gift, an important document, or a package, FlipZon ensures that your delivery is in good hands. We aim to make your experience hassle-free with Express Delivery, Package Tracking, and excellent customer support at every step.</p>
+                <a href="#contact" class="btn">Contact Us</a>
+            </div>
+            <div class="about-image">
+             <img src="about us section image.jpg" alt="">
+
+            </div>
+        </div>
+    </div>
+</section>
+<section class="contact" id="contact">
+    <div class="container">
+        <h2 class="section-title">Contact Us</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <p>Have questions about our services? Want to schedule a pickup? Contact us using the information below or fill out the form.</p>
+                
+                <div class="contact-details">
+                    <div>
+                        <i class="fas fa-map-marker-alt contact-icon"></i>
+                        <span>Fleming Block,Chitkara University,Punjab</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-phone contact-icon"></i>
+                        <span>+91 98XXX 68XXX</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-envelope contact-icon"></i>
+                        <span>info@FlipZon.com</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-clock contact-icon"></i>
+                        <span>Mon-Fri: 8am-8pm, Sat: 9am-5pm</span>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="contact-form">
+                <form id="contact-form">
+                    <input type="text" name="from_name" placeholder="Your Name" required>
+                    <input type="email" name="from_email" placeholder="Your Email" required>
+                    <input type="text" name="subject" placeholder="Subject">
+                    <textarea name="message" placeholder="Your Message" required></textarea>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="pricing" id="pricing">
+    <div class="container">
+        <h2 class="section-title">Pricing Plans</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Standard</h3>
+                <div class="price">₹399<span>/package</span></div>
+                <ul class="pricing-features">
+                    <li>2-3 business days delivery</li>
+                    <li>Domestic shipping</li>
+                    <li>Basic tracking</li>
+                    <li>Up to 5kg</li>
+                </ul>
+                <a href="pay.html?plan=standard" class="btn">Choose Plan</a>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-tag">Most Popular</div>
+                <h3>Express</h3>
+                <div class="price">₹599<span>/package</span></div>
+                <ul class="pricing-features">
+                    <li>24-hour delivery</li>
+                    <li>Domestic</li>
+                    <li>Advanced tracking</li>
+                    <li>Up to 10kg</li>
+                </ul>
+                <a href="pay.html" class="btn">Choose Plan</a>
+            </div>
+            <div class="pricing-card">
+                <h3>Premium</h3>
+                <div class="price">₹899<span>/package</span></div>
+                <ul class="pricing-features">
+                    <li>Same-day delivery</li>
+                    <li>Worldwide coverage</li>
+                    <li>Premium tracking</li>
+                    <li>Up to 20kg</li>
+                </ul>
+                <a href="pay.html?plan=premium" class="btn">Choose Plan</a>
+            </div>
+        </div>
+    </div>
+</section>
+    <section class="testimonials">
+    <div class="container">
+        <h2 class="section-title">What Our Clients Say</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"FlipZon made sure my birthday gift reached on time. Amazing service!"</p>
+                <h4>- Ananya Mehta</h4>
+            </div>
+            <div class="testimonial-card">
+                <p>"Real-time tracking and friendly support. Highly recommended!"</p>
+                <h4>- Chirag Verma</h4>
+            </div>
+            <div class="testimonial-card">
+                <p>"Affordable pricing and fast delivery. FlipZon never disappoints!"</p>
+                <h4>- Priya Sharma</h4>
+            </div>
+        </div>
+    </div>
+</section>
+    <section class="faq-section">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>How can I track my package?</span>
+            <i class="fas fa-chevron-down arrow-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p>You can track your package using the tracking number on the 'Track Your Package' page.</p>
+          </div>
+        </div>
+  
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>What are your delivery timings?</span>
+            <i class="fas fa-chevron-down arrow-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p>We operate from 8am to 8pm on weekdays, and 9am to 5pm on Saturdays.</p>
+          </div>
+        </div>
+  
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Do you offer international shipping?</span>
+            <i class="fas fa-chevron-down arrow-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Yes! Our Premium plan covers worldwide delivery with tracking support.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<footer>
+    <div class="container">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>FlipZon</h3>
+                <p>Delivering your packages with speed and reliability since 2025. Your trusted logistics partner.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Our Team</h3>
+                <ul class="team-links">
+                    <li><a href="https://github.com/ShubhamThakur273" target="_blank"><i class="fab fa-github"></i>Shubham Thakur</a></li>
+                    <li><a href="https://github.com/Rupalii542" target="_blank"><i class="fab fa-github"></i>Rupali Mangla</a></li>
+                    <li><a href="https://github.com/Reyan-Ansari" target="_blank"><i class="fab fa-github"></i>Reyan Ansari</a></li>
+                    <li><a href="https://github.com/tanish2407" target="_blank"><i class="fab fa-github"></i>Tanish</a></li>
+                    <li><a href="https://github.com/rohan985504-coder" target="_blank"><i class="fab fa-github"></i>Rohan Bisht</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Services</h3>
+                <ul>
+                    <li><a href="#">Express Delivery</a></li>
+                    <li><a href="#">Package Tracking</a></li>
+                    <li><a href="#">Warehousing</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Track Package</a></li>
+                    <li><a href="#">24/7 Customer Support</li>
+                    </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 FlipZon. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+    <script src="script.js"></script>
+     <script src="new.js"></script>
+    </body>
+</html>
