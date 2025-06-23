@@ -756,3 +756,21 @@
     50% { opacity: 0; }
   }
   
+.payment {
+  background-color: #f4faff;
+  padding: 50px 0;
+  text-align: center;
+}
+.payment .btn {
+  background-color: #ff6b00;
+  color: white;
+  padding: 12px 25px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  margin: 15px 0;
+  display: inline-block;
+}
+.payment .btn:hover {
+  background-color:#ff6b00;
+}
